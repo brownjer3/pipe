@@ -10,7 +10,6 @@ import { Logger } from '../utils/logger';
 export class AuthService {
   private jwtSecret: string;
   private refreshSecret: string;
-  private encryptionService: EncryptionService;
   private logger: Logger;
 
   constructor(
@@ -25,7 +24,6 @@ export class AuthService {
       throw new Error('JWT_SECRET and REFRESH_SECRET must be set');
     }
 
-    this.encryptionService = new EncryptionService();
     this.logger = logger.child({ service: 'AuthService' });
   }
 

@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { createApp, createHttpServer } from './app';
 import { RealtimeServer } from './realtime/websocket-server';
 import { MCPProtocolHandler } from './mcp/protocol-handler';
+import { registerMCPTools } from './mcp/tools';
 import { logger } from './utils/logger';
 
 async function main() {
@@ -21,11 +22,23 @@ async function main() {
     // Get services from app
     const services = (app as any).services;
 
-    // Create MCP protocol handler
-    const protocolHandler = new MCPProtocolHandler({
-      name: 'Pipe',
-      version: '1.0.0',
-    });
+    // Create MCP protocol handler with services
+    const protocolHandler = new MCPProtocolHandler(
+      {
+        name: 'Pipe',
+        version: '1.0.0',
+      },
+      services.contextEngine,
+      services.sessionManager
+    );
+
+    // Register MCP tools
+    registerMCPTools(
+      protocolHandler,
+      services.contextEngine,
+      services.platformManager,
+      services.queueManager
+    );
 
     // Create WebSocket server
     const wsServer = new RealtimeServer(httpServer, services.authService, process.env.REDIS_URL);

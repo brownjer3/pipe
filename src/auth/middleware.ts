@@ -3,17 +3,15 @@ import passport from 'passport';
 import { AuthContext } from '../types/auth';
 import { UnauthorizedError } from '../utils/errors';
 
-// Extend Express Request type
+// Extend Express Request type to use AuthContext
 declare global {
   namespace Express {
-    interface Request {
-      user?: AuthContext;
-    }
+    interface User extends AuthContext {}
   }
 }
 
 // JWT authentication middleware
-export function authenticate(req: Request, res: Response, next: NextFunction) {
+export function authenticateToken(req: Request, res: Response, next: NextFunction) {
   passport.authenticate('jwt', { session: false }, (err: any, user: AuthContext | false) => {
     if (err) {
       return next(err);
@@ -63,7 +61,7 @@ export async function authenticateWebSocket(
 }
 
 // Team membership check
-export function requireTeamMember(req: Request, res: Response, next: NextFunction) {
+export function requireTeamMember(req: Request, _res: Response, next: NextFunction) {
   if (!req.user) {
     return next(new UnauthorizedError('Authentication required'));
   }
@@ -82,3 +80,6 @@ export function requireTeamMember(req: Request, res: Response, next: NextFunctio
 
   next();
 }
+
+// Legacy authenticate function for compatibility
+export const authenticate = authenticateToken;

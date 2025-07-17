@@ -62,7 +62,12 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
+    "@linear/sdk": "^52.0.0",
+    "@notionhq/client": "^4.0.1",
+    "@octokit/rest": "^22.0.0",
     "@prisma/client": "^6.12.0",
+    "@slack/events-api": "^3.0.1",
+    "@slack/web-api": "^7.9.3",
     "@types/passport-github2": "^1.2.9",
     "@types/uuid": "^10.0.0",
     "bcrypt": "^6.0.0",

@@ -38,7 +38,7 @@ export function configurePassport(authService: AuthService) {
       async (email, password, done) => {
         try {
           const result = await authService.authenticate(email, password);
-          return done(null, result);
+          return done(null, result.user as any);
         } catch (error) {
           return done(error, false);
         }

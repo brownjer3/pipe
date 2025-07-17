@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 
 export interface EncryptedData {
   encrypted: string;
@@ -26,7 +26,7 @@ export class EncryptionService {
 
   encrypt(plaintext: string): EncryptedData {
     const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv(this.algorithm, this.key, iv);
+    const cipher = crypto.createCipheriv(this.algorithm, this.key, iv) as crypto.CipherGCM;
 
     const encrypted = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
 
@@ -44,7 +44,7 @@ export class EncryptionService {
       this.algorithm,
       this.key,
       Buffer.from(data.iv, 'base64')
-    );
+    ) as crypto.DecipherGCM;
 
     decipher.setAuthTag(Buffer.from(data.authTag, 'base64'));
 

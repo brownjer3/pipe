@@ -9,14 +9,81 @@ import { AuthService } from './auth/auth-service';
 import { configurePassport } from './auth/passport-config';
 import { authRouter } from './routes/auth';
 import { healthRouter } from './routes/health';
+import { ContextEngine } from './context/context-engine';
+import { PlatformManager } from './platforms/platform-manager';
+import { QueueManager } from './jobs/queue-manager';
+import { SessionManager } from './sessions/session-manager';
+import { GitHubAdapter } from './platforms/adapters/github';
+import { SlackAdapter } from './platforms/adapters/slack';
+import { createOAuthRoutes } from './routes/oauth';
+import { createWebhookRoutes } from './routes/webhooks';
 
 export function createApp(): Application {
   const app = express();
   const prisma = new PrismaClient();
   const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
 
-  // Initialize services
+  // Initialize core services
   const authService = new AuthService(prisma, redis, logger);
+  const sessionManager = new SessionManager(prisma, redis);
+
+  // Initialize Context Engine
+  const contextEngine = new ContextEngine(
+    prisma,
+    process.env.NEO4J_URL || 'bolt://localhost:7687',
+    {
+      username: process.env.NEO4J_USER || 'neo4j',
+      password: process.env.NEO4J_PASSWORD || 'pipe_password',
+    },
+    redis
+  );
+
+  // Initialize Platform Manager
+  const platformManager = new PlatformManager(prisma, contextEngine, {
+    redis: {
+      host: process.env.REDIS_HOST || 'localhost',
+      port: parseInt(process.env.REDIS_PORT || '6379'),
+    },
+    platforms: {},
+  });
+
+  // Register platform adapters
+  if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+    platformManager.registerAdapter(
+      new GitHubAdapter({
+        clientId: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        webhookSecret: process.env.GITHUB_WEBHOOK_SECRET || 'development-secret',
+      })
+    );
+  }
+
+  if (process.env.SLACK_CLIENT_ID && process.env.SLACK_CLIENT_SECRET) {
+    platformManager.registerAdapter(
+      new SlackAdapter({
+        clientId: process.env.SLACK_CLIENT_ID,
+        clientSecret: process.env.SLACK_CLIENT_SECRET,
+        signingSecret: process.env.SLACK_SIGNING_SECRET || 'development-secret',
+      })
+    );
+  }
+
+  // Initialize Queue Manager
+  const queueManager = new QueueManager(
+    {
+      redis: {
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT || '6379'),
+      },
+    },
+    {
+      platformManager,
+      contextEngine,
+    }
+  );
+
+  // Start session cleanup schedule
+  sessionManager.startCleanupSchedule();
 
   // Configure passport
   configurePassport(authService);
@@ -47,7 +114,7 @@ export function createApp(): Application {
 
   // CORS setup for development
   if (process.env.NODE_ENV === 'development') {
-    app.use((req: Request, res: Response, next: NextFunction) => {
+    app.use((req: Request, res: Response, next: NextFunction): void => {
       res.header('Access-Control-Allow-Origin', '*');
       res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
       res.header(
@@ -66,10 +133,12 @@ export function createApp(): Application {
   // Routes
   app.use('/health', healthRouter);
   app.use('/auth', authRouter(authService));
+  app.use('/api/oauth', createOAuthRoutes(prisma, platformManager));
+  app.use('/api/webhooks', createWebhookRoutes(prisma, platformManager));
 
-  // MCP endpoints will be added here
-  app.get('/', (req: Request, res: Response) => {
-    res.json({
+  // API info route
+  app.get('/', (_req: Request, res: Response) => {
+    return res.json({
       name: 'Pipe MCP Server',
       version: '1.0.0',
       mcp: {
@@ -80,15 +149,15 @@ export function createApp(): Application {
   });
 
   // 404 handler
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    res.status(404).json({
+  app.use((req: Request, res: Response, _next: NextFunction) => {
+    return res.status(404).json({
       error: 'Not Found',
       path: req.path,
     });
   });
 
   // Error handler
-  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  app.use((err: Error, req: Request, res: Response, _next: NextFunction): Response => {
     logger.error('Request error', {
       error: err.message,
       stack: err.stack,
@@ -106,7 +175,7 @@ export function createApp(): Application {
     // Don't leak error details in production
     const message = process.env.NODE_ENV === 'production' ? 'Internal Server Error' : err.message;
 
-    res.status(500).json({
+    return res.status(500).json({
       error: message,
     });
   });
@@ -116,7 +185,16 @@ export function createApp(): Application {
     prisma,
     redis,
     authService,
+    sessionManager,
+    contextEngine,
+    platformManager,
+    queueManager,
   };
+
+  // Initialize services
+  contextEngine.initialize().catch((error) => {
+    logger.error('Failed to initialize Context Engine', error);
+  });
 
   return app;
 }
