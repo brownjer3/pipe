@@ -3,6 +3,18 @@
     {
       "name": "main",
       "path": "."
+    },
+    {
+      "name": "tests",
+      "path": "../pipe-tests"
+    },
+    {
+      "name": "go-to-market",
+      "path": "../pipe-go-to-market"
+    },
+    {
+      "name": "monetization",
+      "path": "../pipe-monetization"
     }
   ],
   "settings": {
