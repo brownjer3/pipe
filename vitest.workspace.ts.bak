@@ -1,0 +1,52 @@
+import { defineWorkspace } from 'vitest/config';
+
+export default defineWorkspace([
+  // Unit tests - fast, isolated
+  {
+    extends: './vitest.config.ts',
+    test: {
+      name: 'unit',
+      include: ['src/**/*.test.ts', 'tests/unit/**/*.test.ts'],
+      environment: 'node',
+      isolate: true,
+    },
+  },
+
+  // Integration tests - with real services
+  {
+    extends: './vitest.config.ts',
+    test: {
+      name: 'integration',
+      include: ['tests/integration/**/*.test.ts'],
+      environment: 'node',
+      setupFiles: ['./test/setup/integration-setup.ts'],
+      testTimeout: 30000,
+      sequence: {
+        concurrent: false, // Run sequentially to avoid conflicts
+      },
+    },
+  },
+
+  // E2E tests - full system tests
+  {
+    extends: './vitest.config.ts',
+    test: {
+      name: 'e2e',
+      include: ['tests/e2e/**/*.test.ts'],
+      setupFiles: ['./test/setup/e2e-setup.ts'],
+      testTimeout: 60000,
+      maxWorkers: 1, // Single worker for e2e
+    },
+  },
+
+  // Component tests - for specific modules
+  {
+    extends: './vitest.config.ts',
+    test: {
+      name: 'components',
+      include: ['tests/components/**/*.test.ts'],
+      environment: 'node',
+      isolate: true,
+    },
+  },
+]);
