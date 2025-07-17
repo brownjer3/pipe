@@ -8,12 +8,14 @@ Welcome to the Pipe MCP Server documentation. This directory contains comprehens
 - **[API Reference](./api-reference.md)** - REST API endpoints and MCP tools documentation
 - **[Platform Integration Guide](./platform-integration.md)** - How to connect and sync with GitHub, Slack, and other platforms
 - **[Development Guide](./development.md)** - Setup, configuration, and development workflow
+- **[Testing Guide](./tests/vitest-implementation-plan.md)** - Comprehensive testing infrastructure and strategy
 - **[Deployment Guide](./deployment.md)** - Production deployment and infrastructure setup
 - **[Security Guide](./security.md)** - Security considerations and best practices
 
 ## Quick Links
 
 - [Getting Started](./development.md#getting-started)
+- [Running Tests](./development.md#testing)
 - [MCP Tools Reference](./api-reference.md#mcp-tools)
 - [OAuth Setup](./platform-integration.md#oauth-configuration)
 - [Troubleshooting](./troubleshooting.md)
