@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma';
 import neo4j, { Driver, Session } from 'neo4j-driver';
 import { Redis } from 'ioredis';
 import { v4 as uuidv4 } from 'uuid';

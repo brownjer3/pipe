@@ -1,7 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import { createServer } from 'http';
 import passport from 'passport';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from './generated/prisma';
 import Redis from 'ioredis';
 import { logger } from './utils/logger';
 import { AppError } from './utils/errors';

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { Redis } from 'ioredis';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma';
 import { AuthContext, AuthResult, JWTPayload, SafeUser, TokenPair } from '../types/auth';
 import { UnauthorizedError, ValidationError } from '../utils/errors';
 import { EncryptionService } from '../utils/encryption';

@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma';
 import { Queue } from 'bullmq';
 import {
   PlatformAdapter,
@@ -34,11 +34,11 @@ export class PlatformManager {
     this.encryptionService = new EncryptionService();
 
     // Initialize queues
-    this.syncQueue = new Queue('platform:sync', {
+    this.syncQueue = new Queue('platform-sync', {
       connection: this.config.redis,
     });
 
-    this.webhookQueue = new Queue('webhook:process', {
+    this.webhookQueue = new Queue('webhook-process', {
       connection: this.config.redis,
     });
   }

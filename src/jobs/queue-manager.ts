@@ -37,8 +37,8 @@ export class QueueManager {
   private setupQueues() {
     // Platform sync queue
     this.queues.set(
-      'platform:sync',
-      new Queue('platform:sync', {
+      'platform-sync',
+      new Queue('platform-sync', {
         connection: this.config.redis,
         defaultJobOptions: {
           attempts: 3,
@@ -54,8 +54,8 @@ export class QueueManager {
 
     // Webhook processing queue
     this.queues.set(
-      'webhook:process',
-      new Queue('webhook:process', {
+      'webhook-process',
+      new Queue('webhook-process', {
         connection: this.config.redis,
         defaultJobOptions: {
           attempts: 5,
@@ -71,8 +71,8 @@ export class QueueManager {
 
     // Context indexing queue
     this.queues.set(
-      'context:index',
-      new Queue('context:index', {
+      'context-index',
+      new Queue('context-index', {
         connection: this.config.redis,
         defaultJobOptions: {
           attempts: 3,
@@ -86,8 +86,8 @@ export class QueueManager {
 
     // Notification queue
     this.queues.set(
-      'notification:send',
-      new Queue('notification:send', {
+      'notification-send',
+      new Queue('notification-send', {
         connection: this.config.redis,
         defaultJobOptions: {
           attempts: 3,
@@ -103,7 +103,7 @@ export class QueueManager {
   private setupWorkers() {
     // Platform sync worker
     const syncWorker = new Worker(
-      'platform:sync',
+      'platform-sync',
       async (job: Job<SyncJob>) => {
         const { platform, userId, teamId, type } = job.data;
 
@@ -127,7 +127,7 @@ export class QueueManager {
 
           // Send notification if available
           if (this.handlers.notificationService) {
-            await this.enqueue('notification:send', {
+            await this.enqueue('notification-send', {
               userId,
               type: 'sync:complete',
               data: {
@@ -154,7 +154,7 @@ export class QueueManager {
 
           // Send error notification
           if (this.handlers.notificationService) {
-            await this.enqueue('notification:send', {
+            await this.enqueue('notification-send', {
               userId,
               type: 'sync:failed',
               data: {
@@ -177,11 +177,11 @@ export class QueueManager {
       }
     );
 
-    this.workers.set('platform:sync', syncWorker);
+    this.workers.set('platform-sync', syncWorker);
 
     // Webhook processor worker
     const webhookWorker = new Worker(
-      'webhook:process',
+      'webhook-process',
       async (job: Job<WebhookJob>) => {
         const { platform, event } = job.data;
 
@@ -220,11 +220,11 @@ export class QueueManager {
       }
     );
 
-    this.workers.set('webhook:process', webhookWorker);
+    this.workers.set('webhook-process', webhookWorker);
 
     // Context indexing worker
     const indexWorker = new Worker(
-      'context:index',
+      'context-index',
       async (job: Job) => {
         const { nodeId, operation } = job.data;
 
@@ -258,11 +258,11 @@ export class QueueManager {
       }
     );
 
-    this.workers.set('context:index', indexWorker);
+    this.workers.set('context-index', indexWorker);
 
     // Notification worker
     const notificationWorker = new Worker(
-      'notification:send',
+      'notification-send',
       async (job: Job) => {
         const { userId, type, data } = job.data;
 
@@ -302,7 +302,7 @@ export class QueueManager {
       }
     );
 
-    this.workers.set('notification:send', notificationWorker);
+    this.workers.set('notification-send', notificationWorker);
   }
 
   private setupEventHandlers() {
@@ -370,7 +370,7 @@ export class QueueManager {
       status: 'pending',
     };
 
-    return this.enqueue('platform:sync', jobData, {
+    return this.enqueue('platform-sync', jobData, {
       priority: type === 'full' ? 1 : 10,
       delay: type === 'full' ? 0 : 5000, // Delay incremental syncs by 5 seconds
     });

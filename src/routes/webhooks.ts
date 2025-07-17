@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma';
 import { PlatformManager } from '../platforms/platform-manager';
 import { PlatformType } from '../types/platform';
 import { logger } from '../utils/logger';
