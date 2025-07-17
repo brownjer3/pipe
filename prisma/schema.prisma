@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String              @id @default(uuid())
+  email           String              @unique
+  passwordHash    String?
+  name            String?
+  avatarUrl       String?
+  settings        Json                @default("{}")
+  isActive        Boolean             @default(true)
+  currentTeamId   String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  currentTeam     Team?               @relation("CurrentTeam", fields: [currentTeamId], references: [id])
+  memberships     TeamMember[]
+  connections     PlatformConnection[]
+  sessions        Session[]
+  auditLogs       AuditLog[]
+  
+  @@index([email])
+  @@map("users")
+}
+
+model Team {
+  id               String              @id @default(uuid())
+  name             String
+  slug             String              @unique
+  settings         Json                @default("{}")
+  subscriptionTier String              @default("free")
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+
+  members          TeamMember[]
+  currentUsers     User[]              @relation("CurrentTeam")
+  connections      PlatformConnection[]
+  sessions         Session[]
+  auditLogs        AuditLog[]
+  
+  @@index([slug])
+  @@map("teams")
+}
+
+model TeamMember {
+  id        String   @id @default(uuid())
+  userId    String
+  teamId    String
+  role      String   @default("member")
+  joinedAt  DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, teamId])
+  @@index([teamId])
+  @@map("team_members")
+}
+
+model PlatformConnection {
+  id            String    @id @default(uuid())
+  userId        String
+  teamId        String
+  platform      String
+  accessToken   String?   // Encrypted
+  refreshToken  String?   // Encrypted
+  expiresAt     DateTime?
+  scope         String[]
+  metadata      Json      @default("{}")
+  lastSyncAt    DateTime?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team          Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, platform])
+  @@index([teamId, platform])
+  @@map("platform_connections")
+}
+
+model Session {
+  id             String    @id @default(uuid())
+  userId         String
+  teamId         String
+  connectionId   String?   @unique
+  ipAddress      String?
+  userAgent      String?
+  lastActivity   DateTime  @default(now())
+  metadata       Json      @default("{}")
+  expiresAt      DateTime?
+  createdAt      DateTime  @default(now())
+
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team           Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  
+  @@index([userId, teamId])
+  @@index([connectionId])
+  @@map("sessions")
+}
+
+model AuditLog {
+  id           String    @id @default(uuid())
+  userId       String?
+  teamId       String?
+  action       String
+  resourceType String?
+  resourceId   String?
+  changes      Json?
+  ipAddress    String?
+  userAgent    String?
+  metadata     Json      @default("{}")
+  createdAt    DateTime  @default(now())
+
+  user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  team         Team?     @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  
+  @@index([teamId, createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([action])
+  @@map("audit_logs")
+}
+
+model SyncStatus {
+  id            String    @id @default(uuid())
+  userId        String
+  teamId        String
+  platform      String
+  lastSyncAt    DateTime?
+  nextSyncAt    DateTime?
+  status        String    @default("pending")
+  itemsSynced   Int       @default(0)
+  errors        Json[]
+  metadata      Json      @default("{}")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@unique([userId, platform])
+  @@index([teamId, platform])
+  @@index([nextSyncAt])
+  @@map("sync_status")
+}
+
+model WebhookEvent {
+  id           String    @id @default(uuid())
+  platform     String
+  eventType    String
+  eventId      String?
+  payload      Json
+  status       String    @default("pending")
+  attempts     Int       @default(0)
+  error        String?
+  processedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  
+  @@index([platform, eventType])
+  @@index([status, createdAt])
+  @@map("webhook_events")
+}
