@@ -1,0 +1,151 @@
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-pipe-navy via-purple-900 to-pipe-navy min-h-screen flex items-center relative overflow-hidden">
+    <!-- Animated background grid -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="grid grid-cols-12 grid-rows-12 h-full w-full">
+            <% for (let i = 0; i < 144; i++) { %>
+                <div class="border border-pipe-green/20 animate-pulse" style="animation-delay: <%= i * 0.1 %>s;"></div>
+            <% } %>
+        </div>
+    </div>
+    
+    <div class="container mx-auto px-4 py-20 text-center relative z-10">
+        <!-- Main headline -->
+        <div class="mb-16">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+                Stop losing 
+                <span class="text-pipe-green relative">
+                    23 minutes
+                    <div class="absolute -bottom-2 left-0 right-0 h-1 bg-pipe-green/30 rounded"></div>
+                </span>
+                <br />
+                per context switch
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+                Pipe bridges GitHub and Slack through MCP, giving you instant context from Claude or your IDE
+            </p>
+            
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+                <a href="/auth/github" 
+                   class="bg-pipe-green text-pipe-navy font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-pipe-green/25 min-w-[200px]"
+                   data-track="cta-click" data-location="hero">
+                    Start Free in 5 Minutes
+                </a>
+                <a href="#demo" 
+                   class="border border-pipe-green text-pipe-green font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-300 hover:bg-pipe-green hover:text-pipe-navy min-w-[200px]">
+                    Watch Demo
+                </a>
+            </div>
+            
+            <!-- Trust indicators -->
+            <div class="flex items-center justify-center space-x-8 text-gray-400 text-sm">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-pipe-green rounded-full"></div>
+                    <span>No credit card required</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-pipe-green rounded-full"></div>
+                    <span>5-minute setup</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-pipe-green rounded-full"></div>
+                    <span>Free during beta</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Terminal Demo -->
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-gray-900 rounded-lg p-6 text-left shadow-2xl border border-gray-800">
+                <!-- Terminal header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-2">
+                        <div class="flex space-x-2">
+                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        </div>
+                        <span class="text-gray-400 ml-4 text-sm">Terminal</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-gray-400 text-sm">
+                        <span>Context Switch Crisis</span>
+                        <div class="w-2 h-2 bg-pipe-green rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+                
+                <!-- Terminal content -->
+                <div class="text-pipe-green font-mono text-sm leading-relaxed">
+                    <div class="mb-4">
+                        <span class="text-gray-500">$ </span>
+                        <span id="terminal-command">context-switch --time-lost</span>
+                    </div>
+                    <div class="space-y-2 text-gray-300">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-red-400">⚠️</span>
+                            <span>You've lost <span class="text-pipe-green font-bold">23 minutes</span> on this context switch</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-yellow-400">💸</span>
+                            <span>Annual productivity cost: <span class="text-red-400 font-bold">$50,000</span></span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-blue-400">🔄</span>
+                            <span>Switching between: <span class="text-purple-400">GitHub</span> → <span class="text-green-400">Slack</span> → <span class="text-orange-400">Linear</span> → <span class="text-purple-400">Back to GitHub</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t border-gray-800">
+                        <div class="mb-2">
+                            <span class="text-gray-500">$ </span>
+                            <span id="terminal-solution">pipe --connect</span>
+                        </div>
+                        <div class="space-y-2 text-gray-300">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-green-400">✅</span>
+                                <span>Connected to GitHub + Slack</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-green-400">✅</span>
+                                <span>MCP server running on port 3000</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-green-400">✅</span>
+                                <span>Claude integration active</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-pipe-green">🚀</span>
+                                <span class="text-pipe-green font-bold">Context switching eliminated!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Flow animation -->
+            <div class="mt-8 flex items-center justify-center space-x-4 text-gray-400">
+                <div class="flex items-center space-x-2">
+                    <div class="w-6 h-6 bg-gray-700 rounded flex items-center justify-center">
+                        <span class="text-xs">📝</span>
+                    </div>
+                    <span class="text-sm">GitHub PR</span>
+                </div>
+                <div class="flex-1 h-px bg-gradient-to-r from-pipe-green to-pipe-blue"></div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-6 h-6 bg-gray-700 rounded flex items-center justify-center">
+                        <span class="text-xs">💬</span>
+                    </div>
+                    <span class="text-sm">Slack Discussion</span>
+                </div>
+                <div class="flex-1 h-px bg-gradient-to-r from-pipe-blue to-pipe-purple"></div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-6 h-6 bg-gray-700 rounded flex items-center justify-center">
+                        <span class="text-xs">🤖</span>
+                    </div>
+                    <span class="text-sm">Claude Context</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
