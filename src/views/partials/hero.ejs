@@ -1,5 +1,5 @@
 <!-- Hero Section -->
-<section class="bg-gradient-to-br from-pipe-navy via-purple-900 to-pipe-navy min-h-screen flex items-center relative overflow-hidden">
+<section class="bg-gradient-to-br from-pipe-black via-pipe-gray to-pipe-black min-h-screen flex items-center relative overflow-hidden">
     <!-- Animated background grid -->
     <div class="absolute inset-0 opacity-10">
         <div class="grid grid-cols-12 grid-rows-12 h-full w-full">
@@ -13,45 +13,45 @@
         <!-- Main headline -->
         <div class="mb-16">
             <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-                Stop losing 
+                <span class="text-pipe-green font-mono text-2xl md:text-3xl block mb-4">pipe:// </span>
+                Developer Collaboration
+                <br />
                 <span class="text-pipe-green relative">
-                    23 minutes
+                    Context Bridge
                     <div class="absolute -bottom-2 left-0 right-0 h-1 bg-pipe-green/30 rounded"></div>
                 </span>
-                <br />
-                per context switch
             </h1>
             
             <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-                Pipe bridges GitHub and Slack through MCP, giving you instant context from Claude or your IDE
+                MCP server connecting GitHub, Slack, and development tools for instant cross-platform context retrieval
             </p>
             
             <!-- CTA Buttons -->
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
                 <a href="/auth/github" 
-                   class="bg-pipe-green text-pipe-navy font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-pipe-green/25 min-w-[200px]"
+                   class="bg-pipe-green text-pipe-black font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-pipe-green/25 min-w-[200px]"
                    data-track="cta-click" data-location="hero">
-                    Start Free in 5 Minutes
+                    Connect Platforms
                 </a>
                 <a href="#demo" 
-                   class="border border-pipe-green text-pipe-green font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-300 hover:bg-pipe-green hover:text-pipe-navy min-w-[200px]">
-                    Watch Demo
+                   class="border border-pipe-green text-pipe-green font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-300 hover:bg-pipe-green hover:text-pipe-black min-w-[200px]">
+                    View Architecture
                 </a>
             </div>
             
-            <!-- Trust indicators -->
+            <!-- Technical indicators -->
             <div class="flex items-center justify-center space-x-8 text-gray-400 text-sm">
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 bg-pipe-green rounded-full"></div>
-                    <span>No credit card required</span>
+                    <span>MCP Protocol</span>
                 </div>
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 bg-pipe-green rounded-full"></div>
-                    <span>5-minute setup</span>
+                    <span>Self-hostable</span>
                 </div>
                 <div class="flex items-center space-x-2">
                     <div class="w-2 h-2 bg-pipe-green rounded-full"></div>
-                    <span>Free during beta</span>
+                    <span>Open Source</span>
                 </div>
             </div>
         </div>
@@ -83,40 +83,40 @@
                     </div>
                     <div class="space-y-2 text-gray-300">
                         <div class="flex items-center space-x-2">
-                            <span class="text-red-400">⚠️</span>
-                            <span>You've lost <span class="text-pipe-green font-bold">23 minutes</span> on this context switch</span>
+                            <span class="text-red-400">ERROR</span>
+                            <span>Context fragmented across <span class="text-pipe-green font-bold">4 platforms</span></span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <span class="text-yellow-400">💸</span>
-                            <span>Annual productivity cost: <span class="text-red-400 font-bold">$50,000</span></span>
+                            <span class="text-yellow-400">WARN</span>
+                            <span>Manual search time: <span class="text-red-400 font-bold">~23 minutes</span></span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <span class="text-blue-400">🔄</span>
-                            <span>Switching between: <span class="text-purple-400">GitHub</span> → <span class="text-green-400">Slack</span> → <span class="text-orange-400">Linear</span> → <span class="text-purple-400">Back to GitHub</span></span>
+                            <span class="text-blue-400">INFO</span>
+                            <span>Platforms: <span class="text-pipe-cyan">GitHub</span> | <span class="text-green-400">Slack</span> | <span class="text-orange-400">Linear</span> | <span class="text-purple-400">Notion</span></span>
                         </div>
                     </div>
                     
                     <div class="mt-6 pt-4 border-t border-gray-800">
                         <div class="mb-2">
                             <span class="text-gray-500">$ </span>
-                            <span id="terminal-solution">pipe --connect</span>
+                            <span id="terminal-solution">pipe --start --mcp</span>
                         </div>
                         <div class="space-y-2 text-gray-300">
                             <div class="flex items-center space-x-2">
-                                <span class="text-green-400">✅</span>
-                                <span>Connected to GitHub + Slack</span>
+                                <span class="text-green-400">OK</span>
+                                <span>GitHub adapter: <span class="text-pipe-green">connected</span></span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-green-400">✅</span>
-                                <span>MCP server running on port 3000</span>
+                                <span class="text-green-400">OK</span>
+                                <span>Slack adapter: <span class="text-pipe-green">connected</span></span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-green-400">✅</span>
-                                <span>Claude integration active</span>
+                                <span class="text-green-400">OK</span>
+                                <span>MCP server: <span class="text-pipe-green">localhost:3000</span></span>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <span class="text-pipe-green">🚀</span>
-                                <span class="text-pipe-green font-bold">Context switching eliminated!</span>
+                                <span class="text-pipe-green">READY</span>
+                                <span class="text-pipe-green font-bold">Cross-platform context bridge active</span>
                             </div>
                         </div>
                     </div>
@@ -131,14 +131,14 @@
                     </div>
                     <span class="text-sm">GitHub PR</span>
                 </div>
-                <div class="flex-1 h-px bg-gradient-to-r from-pipe-green to-pipe-blue"></div>
+                <div class="flex-1 h-px bg-gradient-to-r from-pipe-green to-pipe-cyan"></div>
                 <div class="flex items-center space-x-2">
                     <div class="w-6 h-6 bg-gray-700 rounded flex items-center justify-center">
                         <span class="text-xs">💬</span>
                     </div>
                     <span class="text-sm">Slack Discussion</span>
                 </div>
-                <div class="flex-1 h-px bg-gradient-to-r from-pipe-blue to-pipe-purple"></div>
+                <div class="flex-1 h-px bg-gradient-to-r from-pipe-cyan to-pipe-matrix"></div>
                 <div class="flex items-center space-x-2">
                     <div class="w-6 h-6 bg-gray-700 rounded flex items-center justify-center">
                         <span class="text-xs">🤖</span>

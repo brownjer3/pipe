@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
-    <meta name="description" content="Stop losing 23 minutes per context switch. Pipe bridges GitHub and Slack through MCP, giving you instant context from Claude or your IDE.">
+    <meta name="description" content="Developer Collaboration Context Bridge MCP server. Connect GitHub, Slack, and development tools through Model Context Protocol for instant cross-platform context retrieval.">
     <meta name="keywords" content="developer tools, context switching, GitHub, Slack, MCP, Claude, productivity">
     
     <!-- Open Graph / Facebook -->
@@ -31,10 +31,12 @@
             theme: {
                 extend: {
                     colors: {
-                        'pipe-navy': '#0A0E27',
-                        'pipe-green': '#00D4AA',
-                        'pipe-blue': '#3B82F6',
-                        'pipe-purple': '#8B5CF6'
+                        'pipe-black': '#0D1117',
+                        'pipe-gray': '#161B22',
+                        'pipe-green': '#39FF14',
+                        'pipe-matrix': '#00FF41',
+                        'pipe-cyan': '#58A6FF',
+                        'pipe-white': '#F0F6FC'
                     },
                     fontFamily: {
                         'mono': ['JetBrains Mono', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
@@ -55,6 +57,9 @@
 <body class="font-inter">
     <%- include('partials/header') %>
     <%- include('partials/hero') %>
+    <%- include('partials/demo') %>
+    <%- include('partials/features') %>
+    <%- include('partials/cta') %>
     <%- include('partials/footer') %>
     
     <!-- JavaScript -->

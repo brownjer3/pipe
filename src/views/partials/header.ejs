@@ -1,5 +1,5 @@
 <!-- Header Navigation -->
-<header class="fixed top-0 w-full bg-pipe-navy/90 backdrop-blur-md z-50 border-b border-gray-800">
+<header class="fixed top-0 w-full bg-pipe-black/90 backdrop-blur-md z-50 border-b border-gray-800">
     <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
             <!-- Logo -->
@@ -15,20 +15,20 @@
             <!-- Navigation -->
             <nav class="hidden md:flex items-center space-x-8">
                 <a href="#demo" class="text-gray-300 hover:text-pipe-green transition-colors">Demo</a>
-                <a href="#features" class="text-gray-300 hover:text-pipe-green transition-colors">Features</a>
-                <a href="#pricing" class="text-gray-300 hover:text-pipe-green transition-colors">Pricing</a>
+                <a href="#features" class="text-gray-300 hover:text-pipe-green transition-colors">Architecture</a>
+                <a href="/docs" class="text-gray-300 hover:text-pipe-green transition-colors">Documentation</a>
                 <a href="https://github.com/brownjer3/pipe" class="text-gray-300 hover:text-pipe-green transition-colors">GitHub</a>
             </nav>
             
             <!-- CTA Button -->
             <div class="flex items-center space-x-4">
                 <% if (typeof user !== 'undefined' && user) { %>
-                    <a href="/dashboard" class="bg-pipe-green text-pipe-navy px-4 py-2 rounded-lg font-medium hover:bg-pipe-green/90 transition-colors">
+                    <a href="/dashboard" class="bg-pipe-green text-pipe-black px-4 py-2 rounded-lg font-medium hover:bg-pipe-green/90 transition-colors">
                         Dashboard
                     </a>
                 <% } else { %>
-                    <a href="/auth/github" class="bg-pipe-green text-pipe-navy px-4 py-2 rounded-lg font-medium hover:bg-pipe-green/90 transition-colors">
-                        Start Free
+                    <a href="/auth/github" class="bg-pipe-green text-pipe-black px-4 py-2 rounded-lg font-medium hover:bg-pipe-green/90 transition-colors">
+                        Connect
                     </a>
                 <% } %>
             </div>
