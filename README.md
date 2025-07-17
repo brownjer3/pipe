@@ -60,7 +60,9 @@ npm run dev
 
 - `npm run dev` - Start development server with hot reload
 - `npm run build` - Build TypeScript to JavaScript
-- `npm run test` - Run tests
+- `npm run test` - Run comprehensive Vitest test suite
+- `npm run test:coverage` - Run tests with coverage report
+- `npm run test:ui` - Open interactive test UI
 - `npm run lint` - Run ESLint
 - `npm run format` - Format code with Prettier
 - `npm run typecheck` - Type check without building

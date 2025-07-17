@@ -120,10 +120,15 @@ pipe/
 │   ├── utils/             # Utility functions
 │   ├── app.ts            # Express app setup
 │   └── index.ts          # Entry point
+├── test/                  # Test infrastructure
+│   ├── fixtures/          # Test utilities and helpers
+│   ├── mocks/             # Mock implementations
+│   ├── setup/             # Test environment configuration
+│   └── utils/             # Common test utilities
 ├── prisma/                # Database schema and migrations
 ├── docs/                  # Documentation
 ├── scripts/               # Utility scripts
-├── tests/                 # Test files
+├── vitest.config.ts       # Test configuration
 ├── docker-compose.yml     # Docker services configuration
 ├── .env.example          # Environment variables template
 └── package.json          # Project dependencies
@@ -155,40 +160,87 @@ pipe/
 
 ## Testing
 
+The project uses **Vitest** for comprehensive testing with TypeScript support, custom matchers, and extensive mocking capabilities. See the [Testing Guide](./tests/vitest-implementation-plan.md) for detailed information.
+
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run all tests in watch mode
 npm test
 
-# Run tests in watch mode
-npm test -- --watch
+# Run tests once
+npm run test:run
 
-# Run tests with coverage
+# Run tests with coverage report
 npm run test:coverage
+
+# Run specific test types
+npm run test:unit           # Unit tests only
+npm run test:integration    # Integration tests only
+npm run test:e2e           # End-to-end tests only
+
+# Open interactive test UI
+npm run test:ui
 
 # Run specific test file
 npm test src/auth/auth-service.test.ts
 ```
 
+### Test Infrastructure
+
+The testing suite includes:
+
+- **Custom Matchers**: `toBeValidJWT()`, `toBeValidUUID()`, `toMatchMCPMessage()`
+- **Test Factories**: Consistent data generation for users, teams, sessions
+- **Mock Modules**: Automatic mocking for Prisma, Redis, Neo4j
+- **Fixtures**: Pre-built test utilities for auth, database, MCP, WebSocket
+- **Type Safety**: Full TypeScript support with proper type definitions
+
 ### Writing Tests
 
 ```typescript
 import { describe, it, expect, beforeEach } from 'vitest';
+import { createAuthContext } from '@test/fixtures/auth.fixtures';
+import { createMockPrismaClient } from '@test/fixtures/db.fixtures';
 
 describe('AuthService', () => {
   let authService: AuthService;
+  let mockPrisma: PrismaClient;
   
   beforeEach(() => {
-    authService = new AuthService(/* dependencies */);
+    mockPrisma = createMockPrismaClient();
+    authService = new AuthService(mockPrisma);
   });
   
   it('should authenticate valid credentials', async () => {
+    const { user, accessToken } = createAuthContext();
+    
     const result = await authService.authenticate('user@example.com', 'password');
+    
     expect(result).toBeDefined();
     expect(result.user.email).toBe('user@example.com');
+    expect(result.accessToken).toBeValidJWT();
   });
 });
+```
+
+### Test Structure
+
+```
+test/
+├── fixtures/           # Test utilities and helpers
+├── mocks/             # Mock implementations
+├── setup/             # Test environment configuration
+└── utils/             # Common test utilities
+
+src/
+└── **/*.test.ts       # Co-located unit tests
+
+# Future directories (Phase 2):
+tests/
+├── unit/              # Isolated unit tests
+├── integration/       # Integration tests
+└── e2e/               # End-to-end tests
 ```
 
 ## Debugging
