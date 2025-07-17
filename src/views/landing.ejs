@@ -1,3 +1,64 @@
-<%- include('partials/header') %>
-<%- include('partials/hero') %>
-<%- include('partials/footer') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <meta name="description" content="Stop losing 23 minutes per context switch. Pipe bridges GitHub and Slack through MCP, giving you instant context from Claude or your IDE.">
+    <meta name="keywords" content="developer tools, context switching, GitHub, Slack, MCP, Claude, productivity">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pipe.dev/">
+    <meta property="og:title" content="<%= title %>">
+    <meta property="og:description" content="Stop losing 23 minutes per context switch. Pipe bridges GitHub and Slack through MCP.">
+    <meta property="og:image" content="https://pipe.dev/images/og-image.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://pipe.dev/">
+    <meta property="twitter:title" content="<%= title %>">
+    <meta property="twitter:description" content="Stop losing 23 minutes per context switch. Pipe bridges GitHub and Slack through MCP.">
+    <meta property="twitter:image" content="https://pipe.dev/images/og-image.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'pipe-navy': '#0A0E27',
+                        'pipe-green': '#00D4AA',
+                        'pipe-blue': '#3B82F6',
+                        'pipe-purple': '#8B5CF6'
+                    },
+                    fontFamily: {
+                        'mono': ['JetBrains Mono', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="font-inter">
+    <%- include('partials/header') %>
+    <%- include('partials/hero') %>
+    <%- include('partials/footer') %>
+    
+    <!-- JavaScript -->
+    <script src="/js/animations.js"></script>
+    <script src="/js/tracking.js"></script>
+</body>
+</html>
