@@ -3,6 +3,9 @@ import { createServer } from 'http';
 import passport from 'passport';
 import { PrismaClient } from './generated/prisma';
 import Redis from 'ioredis';
+import path from 'path';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import { logger } from './utils/logger';
 import { AppError } from './utils/errors';
 import { AuthService } from './auth/auth-service';
@@ -88,6 +91,47 @@ export function createApp(): Application {
   // Configure passport
   configurePassport(authService);
 
+  // Security middleware
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            'https://cdn.tailwindcss.com',
+            'https://www.googletagmanager.com',
+          ],
+          styleSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            'https://fonts.googleapis.com',
+            'https://cdn.tailwindcss.com',
+          ],
+          imgSrc: ["'self'", 'data:', 'https:'],
+          fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+          connectSrc: ["'self'"],
+        },
+      },
+    })
+  );
+
+  // Rate limiting
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again later.',
+  });
+  app.use(limiter);
+
+  // View engine setup
+  app.set('view engine', 'ejs');
+  app.set('views', path.join(__dirname, 'views'));
+
+  // Static files
+  app.use(express.static(path.join(__dirname, '../public')));
+
   // Middleware
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -136,8 +180,45 @@ export function createApp(): Application {
   app.use('/api/oauth', createOAuthRoutes(prisma, platformManager));
   app.use('/api/webhooks', createWebhookRoutes(prisma, platformManager));
 
+  // Landing page route
+  app.get('/', async (req: Request, res: Response) => {
+    try {
+      // Get real-time metrics (placeholder for now)
+      const metrics = {
+        activeUsers: 127,
+        searchesPerDay: 1234,
+        timeSaved: '2,567 hours',
+      };
+
+      res.render('landing', {
+        title: 'Pipe - Stop Losing Context',
+        user: req.user || null,
+        metrics,
+      });
+    } catch (error) {
+      logger.error('Landing page error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  // Analytics tracking endpoint
+  app.post('/api/track', (req: Request, res: Response) => {
+    const { event, properties } = req.body;
+
+    // Log analytics event
+    logger.info('Analytics event', {
+      event,
+      properties,
+      ip: req.ip,
+      userAgent: req.get('user-agent'),
+      timestamp: new Date().toISOString(),
+    });
+
+    res.json({ success: true });
+  });
+
   // API info route
-  app.get('/', (_req: Request, res: Response) => {
+  app.get('/api/mcp', (_req: Request, res: Response) => {
     return res.json({
       name: 'Pipe MCP Server',
       version: '1.0.0',
