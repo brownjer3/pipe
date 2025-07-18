@@ -15,6 +15,10 @@
     {
       "name": "monetization",
       "path": "../pipe-monetization"
+    },
+    {
+      "name": "railway",
+      "path": "../pipe-railway"
     }
   ],
   "settings": {

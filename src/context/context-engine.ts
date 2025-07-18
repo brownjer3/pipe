@@ -17,6 +17,12 @@ import {
 } from '../types/platform';
 import { logger } from '../utils/logger';
 
+export interface Neo4jConfig {
+  url: string;
+  username: string;
+  password: string;
+}
+
 export interface CreateContextParams {
   type: ContextNodeType;
   platform: PlatformType;

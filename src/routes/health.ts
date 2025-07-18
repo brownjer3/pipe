@@ -68,9 +68,9 @@ healthRouter.get('/detailed', async (req: Request, res: Response) => {
   }
 
   // Neo4j check (if configured)
-  if (process.env.NEO4J_URI) {
+  if (process.env.NEO4J_URL) {
     const driver = neo4j.driver(
-      process.env.NEO4J_URI,
+      process.env.NEO4J_URL,
       neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASSWORD || 'password')
     );
 

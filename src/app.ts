@@ -30,19 +30,24 @@ export function createApp(): Application {
   const authService = new AuthService(prisma, redis, logger);
   const sessionManager = new SessionManager(prisma, redis);
 
-  // Initialize Context Engine
-  const contextEngine = new ContextEngine(
-    prisma,
-    process.env.NEO4J_URL || 'bolt://localhost:7687',
-    {
-      username: process.env.NEO4J_USER || 'neo4j',
-      password: process.env.NEO4J_PASSWORD || 'pipe_password',
-    },
-    redis
-  );
+  // Initialize Context Engine (optional if Neo4j is not configured)
+  let contextEngine: ContextEngine | null = null;
+  if (process.env.NEO4J_URL) {
+    contextEngine = new ContextEngine(
+      prisma,
+      process.env.NEO4J_URL,
+      {
+        username: process.env.NEO4J_USER || 'neo4j',
+        password: process.env.NEO4J_PASSWORD || 'pipe_password',
+      },
+      redis
+    );
+  } else {
+    logger.warn('Neo4j not configured - context engine features will be disabled');
+  }
 
   // Initialize Platform Manager
-  const platformManager = new PlatformManager(prisma, contextEngine, {
+  const platformManager = new PlatformManager(prisma, contextEngine as any, {
     redis: {
       host: process.env.REDIS_HOST || 'localhost',
       port: parseInt(process.env.REDIS_PORT || '6379'),
@@ -81,7 +86,7 @@ export function createApp(): Application {
     },
     {
       platformManager,
-      contextEngine,
+      contextEngine: contextEngine as any,
     }
   );
 

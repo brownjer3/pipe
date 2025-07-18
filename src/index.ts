@@ -32,13 +32,17 @@ async function main() {
       services.sessionManager
     );
 
-    // Register MCP tools
-    registerMCPTools(
-      protocolHandler,
-      services.contextEngine,
-      services.platformManager,
-      services.queueManager
-    );
+    // Register MCP tools (only if context engine is available)
+    if (services.contextEngine) {
+      registerMCPTools(
+        protocolHandler,
+        services.contextEngine,
+        services.platformManager,
+        services.queueManager
+      );
+    } else {
+      logger.warn('MCP tools not registered - Neo4j not configured');
+    }
 
     // Create WebSocket server
     const wsServer = new RealtimeServer(httpServer, services.authService, process.env.REDIS_URL);
