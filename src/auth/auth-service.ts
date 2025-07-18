@@ -4,7 +4,6 @@ import { Redis } from 'ioredis';
 import { PrismaClient } from '../generated/prisma';
 import { AuthContext, AuthResult, JWTPayload, SafeUser, TokenPair } from '../types/auth';
 import { UnauthorizedError, ValidationError } from '../utils/errors';
-import { EncryptionService } from '../utils/encryption';
 import { Logger } from '../utils/logger';
 
 export class AuthService {
@@ -255,7 +254,7 @@ export class AuthService {
   }
 
   // OAuth methods
-  async findOrCreateOAuthUser(profile: any, provider: string): Promise<any> {
+  async findOrCreateOAuthUser(profile: any): Promise<any> {
     const email = profile.emails?.[0]?.value || profile.email;
     if (!email) {
       throw new ValidationError('No email provided by OAuth provider');

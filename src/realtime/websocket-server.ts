@@ -13,10 +13,10 @@ export class RealtimeServer {
   private pubClient: Redis;
   private subClient: Redis;
   private protocolHandler: any; // Will be set when MCP handler is implemented
-  private heartbeatInterval: NodeJS.Timeout;
+  private heartbeatInterval?: NodeJS.Timeout;
 
   constructor(
-    private httpServer: HTTPServer,
+    httpServer: HTTPServer,
     private authService: AuthService,
     redisUrl?: string
   ) {

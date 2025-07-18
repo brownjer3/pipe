@@ -148,7 +148,6 @@ export function createWebhookRoutes(
   router.post('/test/:platform', async (req: Request, res: Response) => {
     try {
       const platform = req.params.platform as PlatformType;
-      const headers = req.headers as Record<string, string>;
       const body = req.body;
 
       logger.info(`Test webhook received for ${platform}`, { body });
@@ -203,7 +202,7 @@ export function createWebhookRoutes(
 
       return res.json({
         recent: recentWebhooks,
-        stats: stats.map((s) => ({
+        stats: stats.map((s: any) => ({
           platform: s.platform,
           status: s.status,
           count: s._count.id,

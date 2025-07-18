@@ -274,8 +274,8 @@ export class ContextEngine {
   }
 
   private async getTeamTimeline(
-    teamId: string,
-    timeRange?: { start?: Date; end?: Date }
+    _teamId: string,
+    _timeRange?: { start?: Date; end?: Date }
   ): Promise<TimelineEvent[]> {
     // For now, return mock data. In production, this would query audit logs
     return [];
@@ -326,8 +326,25 @@ export class ContextEngine {
       totalNodes: 0,
       totalEdges: 0,
       activeUsers: 0,
-      platformBreakdown: {},
-      typeBreakdown: {},
+      platformBreakdown: {
+        github: 0,
+        slack: 0,
+        jira: 0,
+        linear: 0,
+        notion: 0,
+        discord: 0,
+      } as Record<PlatformType, number>,
+      typeBreakdown: {
+        issue: 0,
+        pull_request: 0,
+        commit: 0,
+        comment: 0,
+        document: 0,
+        message: 0,
+        file: 0,
+        thread: 0,
+        task: 0,
+      } as Record<ContextNodeType, number>,
       activityTrend: { period: 'day', data: [] },
     };
   }
@@ -352,13 +369,13 @@ export class ContextEngine {
       },
     });
 
-    return users.map((user) => ({
+    return users.map((user: any) => ({
       id: user.id,
       name: user.name || user.email,
       email: user.email,
       avatarUrl: user.avatarUrl || undefined,
       lastActive: new Date(), // Would be calculated from activity
-      platforms: user.connections.map((c) => c.platform as PlatformType),
+      platforms: user.connections.map((c: any) => c.platform as PlatformType),
       contributionCount: 0, // Would be calculated from context nodes
     }));
   }

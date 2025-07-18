@@ -59,7 +59,7 @@ export class SessionManager {
     const expiresAt = new Date(now.getTime() + this.sessionTTL * 1000);
 
     // Store in PostgreSQL
-    const dbSession = await this.prisma.session.create({
+    await this.prisma.session.create({
       data: {
         id: sessionId,
         userId: data.userId,
@@ -244,7 +244,7 @@ export class SessionManager {
       },
     });
 
-    return dbSessions.map((dbSession) => ({
+    return dbSessions.map((dbSession: any) => ({
       id: dbSession.id,
       userId: dbSession.userId,
       teamId: dbSession.teamId,

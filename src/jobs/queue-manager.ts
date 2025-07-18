@@ -105,7 +105,7 @@ export class QueueManager {
     const syncWorker = new Worker(
       'platform-sync',
       async (job: Job<SyncJob>) => {
-        const { platform, userId, teamId, type } = job.data;
+        const { platform, userId, type } = job.data;
 
         logger.info('Starting platform sync', {
           jobId: job.id,
@@ -307,7 +307,7 @@ export class QueueManager {
 
   private setupEventHandlers() {
     // Set up queue event listeners for monitoring
-    this.queues.forEach((queue, name) => {
+    this.queues.forEach((_queue, name) => {
       const queueEvents = new QueueEvents(name, {
         connection: this.config.redis,
       });
@@ -409,13 +409,12 @@ export class QueueManager {
       throw new Error(`Queue not found: ${queueName}`);
     }
 
-    const [waiting, active, completed, failed, delayed, paused] = await Promise.all([
+    const [waiting, active, completed, failed, delayed] = await Promise.all([
       queue.getWaitingCount(),
       queue.getActiveCount(),
       queue.getCompletedCount(),
       queue.getFailedCount(),
       queue.getDelayedCount(),
-      queue.getPausedCount(),
     ]);
 
     return {
@@ -424,8 +423,8 @@ export class QueueManager {
       completed,
       failed,
       delayed,
-      paused,
-      total: waiting + active + completed + failed + delayed + paused,
+      paused: 0,
+      total: waiting + active + completed + failed + delayed,
     };
   }
 

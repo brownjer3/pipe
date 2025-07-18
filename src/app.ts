@@ -172,7 +172,8 @@ export function createApp(): Application {
       );
 
       if (req.method === 'OPTIONS') {
-        return res.sendStatus(200);
+        res.sendStatus(200);
+        return;
       }
 
       next();
@@ -278,9 +279,11 @@ export function createApp(): Application {
   };
 
   // Initialize services
-  contextEngine.initialize().catch((error) => {
-    logger.error('Failed to initialize Context Engine', error);
-  });
+  if (contextEngine) {
+    contextEngine.initialize().catch((error) => {
+      logger.error('Failed to initialize Context Engine', error);
+    });
+  }
 
   return app;
 }

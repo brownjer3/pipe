@@ -1,6 +1,4 @@
 import { Router, Request, Response } from 'express';
-import { PrismaClient } from '../generated/prisma';
-import Redis from 'ioredis';
 import neo4j from 'neo4j-driver';
 
 interface HealthCheck {
@@ -19,7 +17,7 @@ interface HealthStatus {
 export const healthRouter = Router();
 
 // Basic health check
-healthRouter.get('/', (req: Request, res: Response) => {
+healthRouter.get('/', (_req: Request, res: Response) => {
   res.json({
     status: 'ok',
     timestamp: new Date().toISOString(),
@@ -109,7 +107,7 @@ healthRouter.get('/detailed', async (req: Request, res: Response) => {
 });
 
 // Liveness probe for Kubernetes
-healthRouter.get('/live', (req: Request, res: Response) => {
+healthRouter.get('/live', (_req: Request, res: Response) => {
   res.json({ alive: true });
 });
 

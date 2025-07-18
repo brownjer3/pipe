@@ -22,7 +22,6 @@ export interface PlatformManagerConfig {
 
 export class PlatformManager {
   private adapters = new Map<PlatformType, PlatformAdapter>();
-  private syncQueue: Queue;
   private webhookQueue: Queue;
   private encryptionService: EncryptionService;
 
@@ -33,11 +32,7 @@ export class PlatformManager {
   ) {
     this.encryptionService = new EncryptionService();
 
-    // Initialize queues
-    this.syncQueue = new Queue('platform-sync', {
-      connection: this.config.redis,
-    });
-
+    // Initialize webhook queue
     this.webhookQueue = new Queue('webhook-process', {
       connection: this.config.redis,
     });
@@ -203,10 +198,10 @@ export class PlatformManager {
 
     // Decrypt tokens
     const decryptedAccessToken = connection.accessToken
-      ? this.encryptionService.decrypt(connection.accessToken)
+      ? this.encryptionService.decrypt(JSON.parse(connection.accessToken))
       : '';
     const decryptedRefreshToken = connection.refreshToken
-      ? this.encryptionService.decrypt(connection.refreshToken)
+      ? this.encryptionService.decrypt(JSON.parse(connection.refreshToken))
       : undefined;
 
     return {
@@ -239,8 +234,8 @@ export class PlatformManager {
         },
       },
       update: {
-        accessToken: encryptedAccessToken,
-        refreshToken: encryptedRefreshToken,
+        accessToken: JSON.stringify(encryptedAccessToken),
+        refreshToken: encryptedRefreshToken ? JSON.stringify(encryptedRefreshToken) : null,
         expiresAt: credentials.expiresAt,
         scope: credentials.scope || [],
         metadata: credentials.metadata || {},
@@ -251,8 +246,8 @@ export class PlatformManager {
         userId,
         teamId: credentials.teamId,
         platform,
-        accessToken: encryptedAccessToken,
-        refreshToken: encryptedRefreshToken,
+        accessToken: JSON.stringify(encryptedAccessToken),
+        refreshToken: encryptedRefreshToken ? JSON.stringify(encryptedRefreshToken) : null,
         expiresAt: credentials.expiresAt,
         scope: credentials.scope || [],
         metadata: credentials.metadata || {},
@@ -294,7 +289,7 @@ export class PlatformManager {
         nextSyncAt,
         status: result.errors.length > 0 ? 'partial' : 'completed',
         itemsSynced: result.totalSynced,
-        errors: result.errors,
+        errors: result.errors as any,
         metadata: result.metadata || {},
         updatedAt: new Date(),
       },
@@ -306,7 +301,7 @@ export class PlatformManager {
         nextSyncAt,
         status: result.errors.length > 0 ? 'partial' : 'completed',
         itemsSynced: result.totalSynced,
-        errors: result.errors,
+        errors: result.errors as any,
         metadata: result.metadata || {},
       },
     });
@@ -331,7 +326,7 @@ export class PlatformManager {
 
   private async findTeamForWebhook(
     platform: PlatformType,
-    event: WebhookEvent
+    _event: WebhookEvent
   ): Promise<string | null> {
     // In a real implementation, this would extract team information from the webhook
     // For now, we'll find the first team with an active connection to this platform
@@ -386,7 +381,7 @@ export class PlatformManager {
       },
     });
 
-    return connections.map((c) => ({
+    return connections.map((c: any) => ({
       platform: c.platform as PlatformType,
       users: c._count.userId,
     }));

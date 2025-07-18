@@ -55,9 +55,9 @@ export function configurePassport(authService: AuthService) {
           clientSecret: process.env.GITHUB_CLIENT_SECRET,
           callbackURL: '/auth/github/callback',
         },
-        async (accessToken: string, refreshToken: string, profile: any, done: any) => {
+        async (_accessToken: string, _refreshToken: string, profile: any, done: any) => {
           try {
-            const user = await authService.findOrCreateOAuthUser(profile, 'github');
+            const user = await authService.findOrCreateOAuthUser(profile);
 
             // Store GitHub access token for platform integration
             // This would be encrypted and stored in platform_connections table

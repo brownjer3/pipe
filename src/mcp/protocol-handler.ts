@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   JSONRPCRequest,
   JSONRPCResponse,
-  JSONRPCError,
   MCPServerConfig,
   MethodHandler,
   ToolDefinition,
@@ -13,7 +12,6 @@ import {
   RequestContext,
   InitializeParams,
   InitializeResult,
-  ToolResult,
 } from '../types/mcp';
 import { MCPConnection } from '../types/websocket';
 import { MCPError } from '../utils/errors';
@@ -28,7 +26,7 @@ export class MCPProtocolHandler extends EventEmitter {
 
   constructor(
     private config: MCPServerConfig,
-    private contextEngine?: any, // Will be injected when available
+    _contextEngine?: any, // Will be injected when available
     private sessionManager?: any // Will be injected when available
   ) {
     super();
@@ -179,11 +177,11 @@ export class MCPProtocolHandler extends EventEmitter {
     });
 
     // Tools handlers
-    this.handlers.set('tools/list', async (context: RequestContext) => {
+    this.handlers.set('tools/list', async (_context: RequestContext) => {
       const tools = Array.from(this.tools.values()).map((tool) => ({
         name: tool.name,
         description: tool.description,
-        inputSchema: this.zodToJsonSchema(tool.inputSchema),
+        inputSchema: this.zodToJsonSchema(tool.inputSchema as z.ZodType<any>),
       }));
 
       return { tools };
@@ -211,7 +209,7 @@ export class MCPProtocolHandler extends EventEmitter {
     });
 
     // Resources handlers
-    this.handlers.set('resources/list', async (context: RequestContext) => {
+    this.handlers.set('resources/list', async (_context: RequestContext) => {
       const resources = Array.from(this.resources.values());
       return { resources };
     });
@@ -229,7 +227,7 @@ export class MCPProtocolHandler extends EventEmitter {
     });
 
     // Prompts handlers
-    this.handlers.set('prompts/list', async (context: RequestContext) => {
+    this.handlers.set('prompts/list', async (_context: RequestContext) => {
       const prompts = Array.from(this.prompts.values());
       return { prompts };
     });
@@ -264,7 +262,7 @@ export class MCPProtocolHandler extends EventEmitter {
     });
 
     this.handlers.set('pipe/stream', async (context: RequestContext) => {
-      const { streamId, action } = context.request.params;
+      const { action } = context.request.params;
 
       // Handle stream control
       if (action === 'start') {
@@ -380,7 +378,7 @@ export class MCPProtocolHandler extends EventEmitter {
     if (schema instanceof z.ZodArray) {
       return {
         type: 'array',
-        items: this.zodToJsonSchema(schema.element),
+        items: this.zodToJsonSchema((schema as any).element),
       };
     }
 

@@ -28,12 +28,12 @@ export function createOAuthRoutes(prisma: PrismaClient, platformManager: Platfor
         // Store state in session or Redis with user info
         // For now, we'll use a simple in-memory store
         // In production, use Redis or session storage
-        const stateData = {
-          userId: req.user!.userId,
-          teamId: req.user!.teamId,
-          platform,
-          timestamp: Date.now(),
-        };
+        // const stateData = {
+        //   userId: req.user!.userId,
+        //   teamId: req.user!.teamId,
+        //   platform,
+        //   timestamp: Date.now(),
+        // };
 
         // TODO: Store state in Redis with 10-minute expiry
         // await redis.setex(`oauth:state:${state}`, 600, JSON.stringify(stateData));

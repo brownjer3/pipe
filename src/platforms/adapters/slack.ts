@@ -226,7 +226,7 @@ export class SlackAdapter implements PlatformAdapter {
     try {
       const result = await this.client!.conversations.history({
         channel: channelId,
-        oldest,
+        oldest: oldest?.toString(),
         limit: options.limit || 50,
       });
 

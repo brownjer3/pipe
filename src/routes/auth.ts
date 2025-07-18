@@ -96,7 +96,7 @@ export function authRouter(authService: AuthService): Router {
     }
   );
 
-  router.get('/failure', (req: Request, res: Response) => {
+  router.get('/failure', (_req: Request, res: Response) => {
     res.status(401).json({ error: 'Authentication failed' });
   });
 

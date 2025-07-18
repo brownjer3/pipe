@@ -267,7 +267,7 @@ export function registerMCPTools(
     name: 'list_platforms',
     description: 'List all connected platforms for the current team',
     inputSchema: z.object({}),
-    handler: async (params, context) => {
+    handler: async (_params, context) => {
       try {
         const session = context.session;
         if (!session) {
@@ -374,7 +374,7 @@ export function registerMCPTools(
             source: 'manual',
             createdVia: 'mcp_tool',
           },
-          relatedTo: params.relatedTo?.map((id) => ({
+          relatedTo: params.relatedTo?.map((id: any) => ({
             targetId: id,
             type: 'relates_to',
           })),
