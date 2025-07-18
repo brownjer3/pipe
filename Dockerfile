@@ -41,6 +41,9 @@ COPY --from=builder /app/prisma ./prisma
 # Copy generated Prisma client
 COPY --from=builder /app/src/generated ./dist/generated
 
+# Create logs directory with proper permissions
+RUN mkdir -p /app/logs && chown -R nodejs:nodejs /app/logs
+
 # Generate Prisma client in production (needed for runtime)
 USER root
 RUN npx prisma generate
