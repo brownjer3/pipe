@@ -16,6 +16,9 @@ RUN npm ci
 # Copy prisma schema
 COPY prisma ./prisma/
 
+# Bypass checksum verification due to Prisma's server issues
+ENV PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING=1
+
 # Generate Prisma client
 RUN npx prisma generate
 
