@@ -1,9 +1,10 @@
-FROM node:20-alpine AS base
+# Use node:20-slim instead of alpine for better Prisma compatibility
+FROM node:20-slim AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-# Add openssl for Prisma
-RUN apk add --no-cache libc6-compat openssl
+# Install OpenSSL and other dependencies
+RUN apt-get update -y && apt-get install -y openssl
 WORKDIR /app
 
 # Copy package files
@@ -33,17 +34,17 @@ COPY . .
 RUN npm run build
 
 # Production image
-FROM base AS runner
+FROM node:20-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 
 # Install runtime dependencies
-RUN apk add --no-cache openssl
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nodejs
+RUN groupadd --system --gid 1001 nodejs
+RUN useradd --system --uid 1001 --gid nodejs nodejs
 
 # Copy necessary files from builder
 COPY --from=builder /app/package*.json ./
