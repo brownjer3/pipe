@@ -2,9 +2,19 @@
 
 Developer Collaboration Context Bridge - An MCP server that unifies developer context across platforms.
 
+🚀 **[Live Demo](https://pipe-production.up.railway.app/)** | [Documentation](./docs) | [API Reference](./docs/api-reference.md)
+
 ## Overview
 
 Pipe is a Model Context Protocol (MCP) server that bridges context from multiple developer platforms (GitHub, Slack, Jira, Linear, Notion) into a unified graph, enabling AI assistants to access comprehensive team collaboration context.
+
+### 🌟 Features
+
+- **Unified Context Graph**: Connects data from GitHub, Slack, Jira, Linear, and Notion
+- **Real-time Sync**: WebSocket support for live updates
+- **MCP Protocol**: Compatible with AI assistants supporting Model Context Protocol
+- **OAuth Integration**: Secure authentication with major platforms
+- **Production Ready**: Deployed on Railway with PostgreSQL, Redis, and Neo4j
 
 ## Tech Stack
 
@@ -15,6 +25,16 @@ Pipe is a Model Context Protocol (MCP) server that bridges context from multiple
 - **Queue**: BullMQ
 - **Authentication**: Passport.js with JWT
 
+## 🚀 Deployment
+
+Pipe is deployed on Railway and available at: **https://pipe-production.up.railway.app/**
+
+### Production Infrastructure
+- **Platform**: Railway
+- **Databases**: PostgreSQL & Redis (Railway managed)
+- **Graph DB**: Neo4j Aura
+- **Monitoring**: Built-in health checks and logging
+
 ## Getting Started
 
 ### Prerequisites
@@ -23,7 +43,7 @@ Pipe is a Model Context Protocol (MCP) server that bridges context from multiple
 - Docker and Docker Compose
 - PostgreSQL, Redis, and Neo4j (or use Docker)
 
-### Installation
+### Local Development
 
 1. Clone the repository:
 ```bash
@@ -76,6 +96,46 @@ The server implements the MCP protocol with WebSocket support for real-time coll
 - **Context Engine**: Manages context graph and search
 - **Platform Manager**: Handles platform integrations
 - **Job Processor**: Background synchronization tasks
+
+## API Endpoints
+
+### Health Checks
+- `GET /health` - Basic health check
+- `GET /health/detailed` - Detailed service status
+- `GET /health/ready` - Kubernetes readiness probe
+
+### Authentication
+- `GET /auth/github` - GitHub OAuth flow
+- `GET /auth/slack` - Slack OAuth flow
+- `POST /auth/login` - Email/password login
+- `POST /auth/register` - User registration
+- `POST /auth/refresh` - Refresh JWT token
+
+### MCP Protocol
+- WebSocket `/ws` - MCP protocol over WebSocket
+
+## Deployment Guide
+
+For detailed deployment instructions, see [Railway Deployment Guide](./docs/railway-deployment-guide.md).
+
+### Quick Deploy to Railway
+
+1. Fork this repository
+2. Connect to Railway
+3. Add PostgreSQL and Redis
+4. Set environment variables:
+   ```bash
+   DATABASE_URL=${{Postgres.DATABASE_URL}}
+   REDIS_URL=${{Redis.REDIS_URL}}
+   JWT_SECRET=<generate with: openssl rand -hex 32>
+   REFRESH_SECRET=<generate with: openssl rand -hex 32>
+   ENCRYPTION_KEY=<generate with: openssl rand -hex 32>
+   ```
+5. Deploy!
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 

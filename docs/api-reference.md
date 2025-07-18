@@ -1,5 +1,7 @@
 # API Reference
 
+Base URL: `https://pipe-production.up.railway.app`
+
 ## REST API Endpoints
 
 ### Authentication
@@ -287,7 +289,7 @@ Manually create a context node.
 
 ## WebSocket Events
 
-Connect to WebSocket endpoint: `ws://localhost:3001`
+Connect to WebSocket endpoint: `wss://pipe-production.up.railway.app/ws`
 
 ### Client Events
 

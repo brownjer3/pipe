@@ -317,8 +317,8 @@ PORT=3000
    - Go to GitHub Settings → Developer settings → OAuth Apps
    - Click "New OAuth App"
    - Application name: `Pipe MCP Server`
-   - Homepage URL: `https://your-app.up.railway.app`
-   - Callback URL: `https://your-app.up.railway.app/auth/github/callback`
+   - Homepage URL: `https://pipe-production.up.railway.app`
+   - Callback URL: `https://pipe-production.up.railway.app/auth/github/callback`
 
 2. Add to Railway:
    ```bash
@@ -330,7 +330,7 @@ PORT=3000
 ### OAuth Configuration (Slack)
 
 1. Create Slack App at [api.slack.com/apps](https://api.slack.com/apps)
-2. Add OAuth redirect URL: `https://your-app.up.railway.app/auth/slack/callback`
+2. Add OAuth redirect URL: `https://pipe-production.up.railway.app/auth/slack/callback`
 3. Add to Railway:
    ```bash
    SLACK_CLIENT_ID=your-client-id
@@ -377,8 +377,8 @@ WEBSOCKET_PING_INTERVAL=30000
 ### Update OAuth Callbacks
 
 After domain setup, update your OAuth providers:
-- GitHub: `https://your-domain.com/auth/github/callback`
-- Slack: `https://your-domain.com/auth/slack/callback`
+- GitHub: `https://pipe-production.up.railway.app/auth/github/callback` (or your custom domain)
+- Slack: `https://pipe-production.up.railway.app/auth/slack/callback` (or your custom domain)
 
 ## Monitoring and Logs
 
