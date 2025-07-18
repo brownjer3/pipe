@@ -23,9 +23,6 @@ export async function setup() {
   process.env.DATABASE_URL =
     process.env.TEST_DATABASE_URL || 'postgresql://test:test@localhost:5433/pipe_test';
   process.env.REDIS_URL = process.env.TEST_REDIS_URL || 'redis://localhost:6380';
-  process.env.NEO4J_URI = process.env.TEST_NEO4J_URI || 'bolt://localhost:7688';
-  process.env.NEO4J_USER = 'neo4j';
-  process.env.NEO4J_PASSWORD = 'test';
 
   // Disable logging in tests unless explicitly enabled
   if (!process.env.ENABLE_TEST_LOGS) {

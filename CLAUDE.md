@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Pipe MCP Server is a Model Context Protocol (MCP) server that integrates with multiple developer platforms (GitHub, Slack, Jira, Linear, Notion) to create a unified context graph. It uses PostgreSQL for main storage, Redis for caching/queues, and Neo4j for graph relationships.
+Pipe MCP Server is a Model Context Protocol (MCP) server that integrates with multiple developer platforms (GitHub, Slack, Jira, Linear, Notion) to create a unified context graph. It uses PostgreSQL for main storage and graph relationships, and Redis for caching/queues.
 
 ## Development Commands
 
@@ -29,7 +29,7 @@ npm run db:seed         # Seed database with initial data
 npm run db:reset        # Reset database (drops, recreates, seeds)
 
 # Docker Services
-npm run docker:up       # Start PostgreSQL, Redis, Neo4j
+npm run docker:up       # Start PostgreSQL, Redis
 npm run docker:down     # Stop all Docker services
 npm run docker:logs     # View service logs
 
@@ -66,8 +66,7 @@ The application follows a modular architecture with clear separation of concerns
 2. **Error Handling**: Centralized error classes in `src/utils/errors.ts` with proper error types and logging
 
 3. **Database Access**: 
-   - Prisma ORM for PostgreSQL (main data storage)
-   - Direct Neo4j driver for graph operations
+   - Prisma ORM for PostgreSQL (main data storage and graph operations)
    - Redis for caching and job queues
 
 4. **Request Flow**:
@@ -78,7 +77,7 @@ The application follows a modular architecture with clear separation of concerns
 ### Environment Configuration
 
 The application requires extensive configuration. Copy `.env.example` to `.env` and configure:
-- Database connections (PostgreSQL, Redis, Neo4j)
+- Database connections (PostgreSQL, Redis)
 - OAuth credentials for each platform
 - Security keys (JWT secret, encryption key)
 - Optional monitoring services (Sentry, Datadog)
@@ -91,8 +90,10 @@ The PostgreSQL schema (managed by Prisma) centers around:
 - `PlatformConnection` - OAuth tokens and platform-specific data
 - `SyncStatus` - Tracks sync state for each platform connection
 - `WebhookEvent` - Queued webhook events for processing
+- `ContextNode` - Graph nodes representing entities from platforms
+- `ContextRelationship` - Graph edges connecting related entities
 
-Neo4j is used to store the actual context graph with relationships between entities across platforms.
+PostgreSQL is used to store the context graph with relationships between entities across platforms using recursive CTEs for graph traversal.
 
 ### Testing Strategy
 

@@ -14,14 +14,14 @@ Pipe is a Model Context Protocol (MCP) server that bridges context from multiple
 - **Real-time Sync**: WebSocket support for live updates
 - **MCP Protocol**: Compatible with AI assistants supporting Model Context Protocol
 - **OAuth Integration**: Secure authentication with major platforms
-- **Production Ready**: Deployed on Railway with PostgreSQL, Redis, and Neo4j
+- **Production Ready**: Deployed on Railway with PostgreSQL and Redis
 
 ## Tech Stack
 
 - **Runtime**: Node.js 20+
 - **Language**: TypeScript 5+
 - **Framework**: Express + Socket.io
-- **Databases**: PostgreSQL, Redis, Neo4j
+- **Databases**: PostgreSQL (with graph capabilities), Redis
 - **Queue**: BullMQ
 - **Authentication**: Passport.js with JWT
 
@@ -32,7 +32,7 @@ Pipe is deployed on Railway and available at: **https://pipe-production.up.railw
 ### Production Infrastructure
 - **Platform**: Railway
 - **Databases**: PostgreSQL & Redis (Railway managed)
-- **Graph DB**: Neo4j Aura
+- **Graph Storage**: PostgreSQL with recursive CTEs
 - **Monitoring**: Built-in health checks and logging
 
 ## Getting Started
@@ -41,7 +41,7 @@ Pipe is deployed on Railway and available at: **https://pipe-production.up.railw
 
 - Node.js 20+
 - Docker and Docker Compose
-- PostgreSQL, Redis, and Neo4j (or use Docker)
+- PostgreSQL and Redis (or use Docker)
 
 ### Local Development
 

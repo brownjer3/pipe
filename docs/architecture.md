@@ -27,10 +27,10 @@ Pipe MCP Server is built as a modular, scalable system that bridges multiple dev
 └─────────────────────────────────────────────────────────────────┘
          │                       │                         │
          ▼                       ▼                         ▼
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   PostgreSQL    │     │     Neo4j       │     │     Redis       │
-│   (Core Data)   │     │ (Context Graph) │     │   (Sessions)    │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
+┌─────────────────────────────────┐     ┌─────────────────┐
+│          PostgreSQL             │     │     Redis       │
+│  (Core Data + Context Graph)    │     │   (Sessions)    │
+└─────────────────────────────────┘     └─────────────────┘
 ```
 
 ## Core Components
@@ -57,7 +57,7 @@ Pipe MCP Server is built as a modular, scalable system that bridges multiple dev
 - **Location**: `src/context/context-engine.ts`
 - **Purpose**: Manages the collaborative context graph
 - **Features**:
-  - Neo4j graph operations
+  - PostgreSQL graph operations with recursive CTEs
   - Context search and retrieval
   - Team context aggregation
   - Caching layer
@@ -119,10 +119,8 @@ interface PlatformAdapter {
 - Sessions
 - Audit Logs
 - Webhook Events
-
-### Neo4j (Graph Database)
 - Context Nodes (issues, PRs, messages, etc.)
-- Relationships between nodes
+- Context Relationships between nodes
 - Team collaboration patterns
 
 ### Redis (Cache & Sessions)

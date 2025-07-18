@@ -121,32 +121,6 @@ export const createMockRedisClient = () => {
 };
 
 /**
- * Create a mock Neo4j driver
- */
-export const createMockNeo4jDriver = () => {
-  const mockSession = {
-    run: vi.fn().mockResolvedValue({
-      records: [],
-      summary: {
-        counters: {
-          nodesCreated: 0,
-          nodesDeleted: 0,
-          relationshipsCreated: 0,
-          relationshipsDeleted: 0,
-        },
-      },
-    }),
-    close: vi.fn().mockResolvedValue(undefined),
-  };
-
-  return {
-    session: vi.fn().mockReturnValue(mockSession),
-    close: vi.fn().mockResolvedValue(undefined),
-    verifyConnectivity: vi.fn().mockResolvedValue(undefined),
-  };
-};
-
-/**
  * Database transaction test helper
  */
 export const mockTransaction = async <T>(
