@@ -43,4 +43,4 @@ USER nodejs
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start:migrate"]
+CMD ["npm", "start"]

@@ -14,11 +14,27 @@ async function main() {
     });
 
     // Validate required environment variables
-    const requiredEnvVars = ['JWT_SECRET', 'REFRESH_SECRET', 'DATABASE_URL'];
+    const requiredEnvVars = ['DATABASE_URL'];
+    const optionalButRecommended = ['JWT_SECRET', 'REFRESH_SECRET', 'ENCRYPTION_KEY'];
+
     for (const envVar of requiredEnvVars) {
       if (!process.env[envVar]) {
         logger.error(`Missing required environment variable: ${envVar}`);
         throw new Error(`Missing required environment variable: ${envVar}`);
+      }
+    }
+
+    // Check optional but recommended vars
+    for (const envVar of optionalButRecommended) {
+      if (!process.env[envVar]) {
+        logger.warn(`Missing recommended environment variable: ${envVar} - using default`);
+        // Set defaults for development/testing
+        if (envVar === 'JWT_SECRET')
+          process.env.JWT_SECRET = 'development-jwt-secret-change-in-production';
+        if (envVar === 'REFRESH_SECRET')
+          process.env.REFRESH_SECRET = 'development-refresh-secret-change-in-production';
+        if (envVar === 'ENCRYPTION_KEY')
+          process.env.ENCRYPTION_KEY = '0123456789abcdef0123456789abcdef';
       }
     }
 

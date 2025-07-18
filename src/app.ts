@@ -27,7 +27,32 @@ export function createApp(): Application {
   logger.info('Initializing database connections...');
 
   const prisma = new PrismaClient();
-  const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
+
+  // Initialize Redis with better error handling
+  const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+  logger.info(`Connecting to Redis at ${redisUrl.replace(/:[^:@]+@/, ':***@')}`);
+
+  const redis = new Redis(redisUrl, {
+    maxRetriesPerRequest: 3,
+    enableOfflineQueue: false,
+    retryStrategy: (times) => {
+      if (times > 3) {
+        logger.error('Redis connection failed after 3 attempts');
+        return null;
+      }
+      const delay = Math.min(times * 100, 3000);
+      logger.warn(`Redis retry attempt ${times}, waiting ${delay}ms`);
+      return delay;
+    },
+  });
+
+  redis.on('error', (err) => {
+    logger.error('Redis connection error:', err);
+  });
+
+  redis.on('connect', () => {
+    logger.info('Redis connected successfully');
+  });
 
   // Initialize core services
   const authService = new AuthService(prisma, redis, logger);
