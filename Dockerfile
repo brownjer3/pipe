@@ -40,6 +40,9 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/prisma ./prisma
 # Copy generated Prisma client
 COPY --from=builder /app/src/generated ./dist/generated
+# Copy views and static files
+COPY --from=builder /app/src/views ./dist/views
+COPY --from=builder /app/public ./public
 
 # Create logs directory with proper permissions
 RUN mkdir -p /app/logs && chown -R nodejs:nodejs /app/logs
