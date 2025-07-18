@@ -38,7 +38,12 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/prisma ./prisma
+# Copy generated Prisma client
+COPY --from=builder /app/src/generated ./dist/generated
 
+# Generate Prisma client in production (needed for runtime)
+USER root
+RUN npx prisma generate
 USER nodejs
 
 EXPOSE 3000
