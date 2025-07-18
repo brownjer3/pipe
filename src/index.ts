@@ -7,20 +7,31 @@ import { logger } from './utils/logger';
 
 async function main() {
   try {
+    logger.info('Starting Pipe MCP Server...', {
+      nodeVersion: process.version,
+      env: process.env.NODE_ENV,
+      port: process.env.PORT || 3000,
+    });
+
     // Validate required environment variables
     const requiredEnvVars = ['JWT_SECRET', 'REFRESH_SECRET', 'DATABASE_URL'];
     for (const envVar of requiredEnvVars) {
       if (!process.env[envVar]) {
+        logger.error(`Missing required environment variable: ${envVar}`);
         throw new Error(`Missing required environment variable: ${envVar}`);
       }
     }
 
+    logger.info('Environment variables validated');
+
     // Create Express app
+    logger.info('Creating Express app...');
     const app = createApp();
     const httpServer = createHttpServer(app);
 
     // Get services from app
     const services = (app as any).services;
+    logger.info('Services initialized');
 
     // Create MCP protocol handler with services
     const protocolHandler = new MCPProtocolHandler(
@@ -52,9 +63,12 @@ async function main() {
 
     // Start HTTP server
     const PORT = process.env.PORT || 3000;
-    httpServer.listen(PORT, () => {
+    const HOST = '0.0.0.0'; // Important for Railway
+
+    httpServer.listen(Number(PORT), HOST, () => {
       logger.info(`Server started`, {
         port: PORT,
+        host: HOST,
         environment: process.env.NODE_ENV,
         websocket: '/ws',
       });

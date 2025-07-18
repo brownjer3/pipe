@@ -23,6 +23,9 @@ import { createWebhookRoutes } from './routes/webhooks';
 
 export function createApp(): Application {
   const app = express();
+
+  logger.info('Initializing database connections...');
+
   const prisma = new PrismaClient();
   const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
 
