@@ -1,0 +1,15 @@
+# Development overrides
+version: '3.8'
+
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: pipe_db_dev
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: dev_password
+
+  redis:
+    ports:
+      - "6379:6379"

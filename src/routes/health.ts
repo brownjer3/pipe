@@ -1,5 +1,4 @@
 import { Router, Request, Response } from 'express';
-import neo4j from 'neo4j-driver';
 
 interface HealthCheck {
   name: string;
@@ -65,32 +64,24 @@ healthRouter.get('/detailed', async (req: Request, res: Response) => {
     });
   }
 
-  // Neo4j check (if configured)
-  if (process.env.NEO4J_URL) {
-    const driver = neo4j.driver(
-      process.env.NEO4J_URL,
-      neo4j.auth.basic(process.env.NEO4J_USER || 'neo4j', process.env.NEO4J_PASSWORD || 'password')
-    );
-
-    try {
-      const start = Date.now();
-      const session = driver.session();
-      await session.run('RETURN 1');
-      await session.close();
-      checks.push({
-        name: 'neo4j',
-        status: 'healthy',
-        latency: Date.now() - start,
-      });
-    } catch (error: any) {
-      checks.push({
-        name: 'neo4j',
-        status: 'unhealthy',
-        error: error.message,
-      });
-    } finally {
-      await driver.close();
-    }
+  // Context Graph check (PostgreSQL-based)
+  try {
+    const start = Date.now();
+    // Test graph query capability
+    await services.prisma.$queryRaw`
+      SELECT COUNT(*) FROM context_nodes WHERE "teamId" IS NOT NULL LIMIT 1
+    `;
+    checks.push({
+      name: 'context-graph',
+      status: 'healthy',
+      latency: Date.now() - start,
+    });
+  } catch (error: any) {
+    checks.push({
+      name: 'context-graph',
+      status: 'unhealthy',
+      error: error.message,
+    });
   }
 
   const allHealthy = checks.every((c) => c.status === 'healthy');

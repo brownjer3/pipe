@@ -44,6 +44,7 @@ model Team {
   connections      PlatformConnection[]
   sessions         Session[]
   auditLogs        AuditLog[]
+  contextNodes     ContextNode[]
   
   @@index([slug])
   @@map("teams")
@@ -164,4 +165,46 @@ model WebhookEvent {
   @@index([platform, eventType])
   @@index([status, createdAt])
   @@map("webhook_events")
+}
+
+model ContextNode {
+  id           String    @id @default(uuid())
+  platform     String
+  externalId   String
+  type         String
+  content      Json
+  teamId       String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  team         Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  
+  // Relationships where this node is the source
+  outgoingRelationships ContextRelationship[] @relation("SourceNode")
+  
+  // Relationships where this node is the target
+  incomingRelationships ContextRelationship[] @relation("TargetNode")
+  
+  @@unique([platform, externalId])
+  @@index([teamId, platform])
+  @@index([type])
+  @@map("context_nodes")
+}
+
+model ContextRelationship {
+  id               String    @id @default(uuid())
+  sourceId         String
+  targetId         String
+  relationshipType String
+  metadata         Json      @default("{}")
+  weight           Float     @default(1.0)
+  createdAt        DateTime  @default(now())
+  
+  source           ContextNode @relation("SourceNode", fields: [sourceId], references: [id], onDelete: Cascade)
+  target           ContextNode @relation("TargetNode", fields: [targetId], references: [id], onDelete: Cascade)
+  
+  @@index([sourceId])
+  @@index([targetId])
+  @@index([relationshipType])
+  @@map("context_relationships")
 }
