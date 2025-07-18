@@ -12,14 +12,15 @@ COPY prisma ./prisma/
 # Install dependencies
 RUN npm ci
 
+# Generate Prisma client after installing dependencies
+RUN npx prisma generate
+
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/prisma ./prisma
 COPY . .
-
-# Generate Prisma client after copying source files
-RUN npx prisma generate
 
 # Build the application
 RUN npm run build
@@ -54,4 +55,4 @@ USER nodejs
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["sh", "-c", "npm run db:migrate:deploy && npm start"]

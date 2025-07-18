@@ -1,9 +1,8 @@
 [build]
-builder = "nixpacks"
-buildCommand = "npm ci && npm run build && npx prisma generate"
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "npm run db:migrate:deploy && npm start"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
